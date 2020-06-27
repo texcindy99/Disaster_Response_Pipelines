@@ -12,7 +12,6 @@ nltk.download(['punkt', 'wordnet', 'averaged_perceptron_tagger','stopwords'])
 
 from sklearn.multioutput import MultiOutputClassifier
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.svm import LinearSVC
 from sklearn.metrics import classification_report, precision_recall_fscore_support
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.pipeline import Pipeline, FeatureUnion
@@ -55,11 +54,11 @@ def load_data(database_filepath):
     
     # Extract X and Y
     X = df['message']
-    # Drop category 'child_alone' which are all 0 
-    Y = df.drop(['id', 'message','original', 'genre','child_alone'], axis = 1)
+    # Drop non-category features
+    Y = df.drop(['id', 'message','original', 'genre'], axis = 1)
     # Replace "2" in Y to "1" to simplify classification
     # Y[Y>=2]=1
-    Y=Y.replace(to_replace ='2', value ='1') 
+    Y=Y.replace(to_replace ='2', value ='0') 
     Y=Y.astype(int)
     
     # Get category names
@@ -83,7 +82,10 @@ def tokenize(text):
     for url in detected_urls:
         text = text.replace(url, "urlplaceholder")
 
-    tokens = [ w for w in word_tokenize(text) if w not in nltk.corpus.stopwords.words("english")]
+    # Only consider word which is alphanumeric and not in stopwords
+    tokens = [ w for w in word_tokenize(text) if (w.isalnum()) &
+              (w not in nltk.corpus.stopwords.words("english"))
+              ]
     lemmatizer = WordNetLemmatizer()
 
     clean_tokens = []
@@ -198,13 +200,13 @@ def build_model():
             ('starting_verb', StartingVerbExtractor())
         ])),
     
-        ('clf', MultiOutputClassifier(LinearSVC()))
+        ('clf', MultiOutputClassifier(RandomForestClassifier()))
     ])
     
     # Set parameter grid for optimization
     parameters = {
     'features__text_pipeline__vect__max_df': (0.5, 1.0),
-    'clf__estimator__C': [1.0, 5.0]
+    'clf__estimator__n_estimators': [20, 50]
     }
 
     # create grid search object
