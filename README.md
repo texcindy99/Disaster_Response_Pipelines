@@ -44,7 +44,7 @@ There are three steps to run this projects:
 - Clean and wrangle the data
 - Stores the data into DisasterResponse.db
 
-See more details in ./data/process_data.py
+See more details in [./data/process_data.py](https://github.com/texcindy99/Disaster_Response_Pipelines/blob/master/data/process_data.py)
 
 ### 2. ML pipeline
 
@@ -59,7 +59,7 @@ The test results are shown in the image below:
 
 ![ ](img/Classifier_results.jpg)
 
-See more details in ./model/train_classifier.py
+See more details in [./model/train_classifier.py](https://github.com/texcindy99/Disaster_Response_Pipelines/blob/master/models/train_classifier.py)
 
 ### 3. Flask web app
 
@@ -90,6 +90,11 @@ Type in a message and press "Classify Message" button, you will see the web page
 ![ ](img/WebApp_classifier.jpg)
 
 ## Discussion <a name="discussion"></a>
+
+I need to use MultiOutputClassifier to classify the messages since one message may have more than one label categories as you can see in the image below.
+
+![ ](img/Number_of_labels.jpg)
+
 The data is unbalance as 
 
 ![ ](img/Category_percentage.jpg)
