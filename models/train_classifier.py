@@ -56,10 +56,9 @@ def load_data(database_filepath):
     X = df['message']
     # Drop non-category features
     Y = df.drop(['id', 'message','original', 'genre'], axis = 1)
-    # Replace "2" in Y to "1" to simplify classification
-    # Y[Y>=2]=1
-    Y=Y.replace(to_replace ='2', value ='0') 
-    Y=Y.astype(int)
+    # Replace "2" in Y to "0" to simplify classification
+    Y[Y>=2]=0
+    ## Y=Y.replace(to_replace ='2', value ='0')  # if Y.dtypes is not int
     
     # Get category names
     category_names = Y.columns
