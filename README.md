@@ -23,31 +23,7 @@ This is my Udacity disaster responses classifier project. I was interestested in
 
 The file structure is as below:
 
-- app
-| - template
-| |- master.html  # main page of web app
-| |- go.html  # classification result page of web app
-|- run.py  # Flask file that runs app
-
-- data
-|- DisasterResponse.db   # database to save clean data to
-|- disaster_categories.csv  # data to process 
-|- disaster_messages.csv  # data to process
-|- process_data.py  # clean and save data
-
-- img
-|- Classifier_results.jpg  # image for README file 
-|- WebApp_classifier.jpg  # image for README file 
-|- WebApp_home.jpg   # image for README file 
-|- run_webApp.jpg   # image for README file 
-
-- models
-|- train_classifier.py   # build classifier pipeline
-|- classifier.pkl  # saved model 
- 
-- ETL Pipeline Preparation.ipynb
-- ML Pipeline Preparation.ipynb
-- README.md
+![ ](img/File_structure.jpg)
 
 There are two notebooks available here which are used to write two python files: process_data.py for data cleaning and train_classifier.py for building machine learning pipeline. The notebooks are doing the same thing as in the python files, but adding more Markdown cells and visualization to assist in walking through the thought process for individual steps.  
 
@@ -81,7 +57,7 @@ See more details in ./data/process_data.py
 
 The test results are shown in the image below:
 
-![results](img/Classifier_results.jpg)
+![ ](img/Classifier_results.jpg)
 
 See more details in ./model/train_classifier.py
 
@@ -94,7 +70,7 @@ See more details in ./model/train_classifier.py
 
 Run your app with python run.py command until you see messages as in the image below:
 
-![results](img/run_webApp.jpg)
+![ ](img/run_webApp.jpg)
 
 Open another terminal and type env|grep WORK this will give you the spaceid (it will start with view*** and some characters after that)
 Now open your browser window and type https://viewa7a4999b-3001.udacity-student-workspaces.com, replace the whole viewa7a4999b with your space id that you got in the previous step
@@ -107,16 +83,16 @@ Go to http://localhost:3001 and the app will now run
 
 The web page should look as below
 
-![results](img/WebApp_home.jpg)
+![ ](img/WebApp_home.jpg)
 
 Type in a message and press "Classify Message" button, you will see the web page showing the message labels as below:
 
-![results](img/WebApp_classifier.jpg)
+![ ](img/WebApp_classifier.jpg)
 
 ## Discussion <a name="discussion"></a>
 The data is unbalance as 
 
-![results](img/Category_percentage.jpg)
+![ ](img/Category_percentage.jpg)
 
 ## Licensing, Authors, Acknowledgements <a name="licensing"></a>
 
