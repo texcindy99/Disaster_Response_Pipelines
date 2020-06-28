@@ -13,7 +13,8 @@ from sklearn.feature_extraction.text import CountVectorizer
 
 from flask import Flask
 from flask import render_template, request, jsonify
-from plotly.graph_objs import Bar
+# from plotly.graph_objs import Bar
+import plotly.graph_objs as goo
 from sklearn.externals import joblib
 from sqlalchemy import create_engine
 
@@ -118,13 +119,13 @@ def index():
     Y = df.drop(['id', 'message','original', 'genre'], axis = 1)
     Y=Y.replace(to_replace ='2', value ='0') 
     Y=Y.astype(int)
-    # Get "1" count for each category
-    cat_count = Y.sum().sort_values(ascending=False)
+    # Get label "1" percentage for each category
+    cat_count = Y.mean().sort_values(ascending=False)
     cat_name = list(cat_count.index) 
     
     ## data for 3rd plot
-    hist, bin_edges = np.histogram(Y.sum(axis=1),bins=np.arange(start=0.5, stop=21.5, step=1))
-    bin_grid=np.arange(start=1, stop=21, step=1)
+    hist, bin_edges = np.histogram(Y.sum(axis=1),bins=np.arange(start=0.5, stop=16.5, step=1))
+    bin_grid=np.arange(start=1, stop=16, step=1)
     
     ## data for 4th plot
     # Get list of word tokens and counts
@@ -143,91 +144,77 @@ def index():
    
     # create visuals
     # TODO: Below is an example - modify to create your own visuals
-    graphs = [
-        # fig 1
-        {
-            'data': [
-                Bar(
-                    x=genre_names,
-                    y=genre_counts
+    graph_one = []
+    
+    graph_one.append(
+    	  goo.Bar(
+          x = genre_names,
+          y = genre_counts
+          ))
+    
+    layout_one = dict(title = 'Distribution of Message',
+                xaxis = dict(title = 'Genre'),
+                yaxis = dict(title = 'Count'),
+                height =400,
+                width = 600
                 )
-            ],
 
-            'layout': {
-                'title': 'Distribution of Message Genres',
-                'yaxis': {
-                    'title': "Count"
-                },
-                'xaxis': {
-                    'title': "Genre"
-                }
-            }
-        },
+    graph_two = []
+    
+    graph_two.append(
+          goo.Bar(
+          x = cat_name[0:10],
+          y = cat_count[0:10]
+          ))
+    
+    layout_two = dict(title = 'Top 10 Category Percentage',
+                xaxis = dict(title = 'Category'),
+                yaxis = dict(title = 'Count'),
+                height = 400, 
+                width = 600
+                )      
+
+    graph_three = []
+    
+    graph_three.append(
+          goo.Bar(
+          x = bin_grid,
+          y = hist
+          ))
+    
+    layout_three = dict(title = 'Distribution of Number of lables for Each Message',
+                xaxis = dict(title = 'Number of lables for Each Message'),
+                yaxis = dict(title = 'Count'),
+                height = 430,
+                width = 600
+                )
         
-        # fig 2
-        {
-            'data': [
-                Bar(
-                    x=cat_name[0:10],
-                    y=cat_count[0:10]
+    graph_four = []
+    
+    graph_four.append(
+          goo.Bar(
+          x = top10_word,
+          y = top10_count
+          ))
+    
+    layout_four = dict(title = 'Counts of Top 10 words in first {} messages'.format(len(X_part)),
+                xaxis = dict(title = 'word'),
+                yaxis = dict(title = 'Count'),
+                height = 430,
+                width = 600
                 )
-            ],
 
-            'layout': {
-                'title': 'Top 10 Category Counts',
-                'yaxis': {
-                    'title': "Count"
-                },
-                'xaxis': {
-                    'title': "Category"
-                }
-            }
-        },
-        
-         # fig 3
-        {
-            'data': [
-                Bar(
-                    x=bin_grid,
-                    y=hist
-                )
-            ],
+    figures = []
 
-            'layout': {
-                'title': 'Distribution of Number of lables for Each Message',
-                'yaxis': {
-                    'title': "Count"
-                },
-                'xaxis': {
-                    'title': "Number of lables for Each Message"
-                }
-            }
-        },
-        
-        # fig 4
-        {
-            'data': [
-                Bar(
-                    x=top10_word,
-                    y=top10_count
-                )
-            ],
-
-            'layout': {
-                'title': 'Counts of Top 10 words in first {} messages'.format(len(X_part)),
-                'yaxis': {
-                    'title': "Count"
-                },
-                'xaxis': {
-                    'title': "Word"
-                }
-            }
-        }
-    ]
+    figures.append(dict(data=graph_one, layout=layout_one))
+    figures.append(dict(data=graph_two, layout=layout_two))
+    figures.append(dict(data=graph_three, layout=layout_three))
+    figures.append(dict(data=graph_four, layout=layout_four))
     
     # encode plotly graphs in JSON
-    ids = ["graph-{}".format(i) for i, _ in enumerate(graphs)]
-    graphJSON = json.dumps(graphs, cls=plotly.utils.PlotlyJSONEncoder)
+    ids = ["graph-{}".format(i) for i, _ in enumerate(figures)]
+    print(ids)
+    graphJSON = json.dumps(figures, cls=plotly.utils.PlotlyJSONEncoder)
     
     # render web page with plotly graphs
     return render_template('master.html', ids=ids, graphJSON=graphJSON)
