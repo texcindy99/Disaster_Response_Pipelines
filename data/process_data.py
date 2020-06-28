@@ -50,10 +50,10 @@ def clean_data(df):
     
     for column in categories:
         # set each value to be the last character of the string
-        categories[column] = categories[column].str.split('-').str.get(1)
-        
-    # convert column from string to numeric
-    categories[column] = pd.to_numeric(categories[column])
+        ## categories[column] = categories[column].str.split('-').str.get(1)
+        categories[column] = categories[column].astype(str).str[-1]
+        # convert column from string to numeric
+        categories[column] = categories[column].astype(int)
     
     # drop the original categories column from `df`
     df.drop('categories',axis=1,inplace=True)
@@ -79,10 +79,17 @@ def save_data(df, database_filename):
     output:
     The data file saved in the database
     """
+    # Get the data table name
+    path_str=database_filename.split('/')
+    for name in path_str :
+        if name.find('.db'):
+            datatable_name=name.split('.')[0]
+            
     # Establish the connection the the database
     engine = create_engine('sqlite:///{}'.format(database_filename))
-    df.to_sql(database_filename, engine, if_exists='replace', index=False)
+    df.to_sql(datatable_name, engine, if_exists='replace', index=False)
     conn = engine.raw_connection()
+    
     # commit any changes to the database and close the connection to the    database
     conn.commit()
     conn.close()
