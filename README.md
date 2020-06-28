@@ -4,7 +4,8 @@
 2. [Project Motivation](#motivation)
 3. [File Descriptions](#files)
 4. [Results](#results)
-5. [Licensing, Authors, and Acknowledgements](#licensing)
+5. [Discussion](#discussion)
+6. [Licensing, Authors, and Acknowledgements](#licensing)
 
 ## Installation <a name="installation"></a>
 
@@ -12,28 +13,111 @@ There should be no necessary libraries to run the code here beyond the Anaconda 
 
 ## Project Motivation <a name="motivation"></a>
 
-This is ... project. I was interestested in using ... data to better understand:
+This is my Udacity disaster responses classifier project. I was interestested in using disaster related messages from [Figure Eight](https://appen.com/) to:
 
-1. Q1
-2. Q2
-3. Q3
+1. better understand the category label for each message
+2. build and optimize a pipeline to classify diaster related messages
+3. Deploy the classifier into a webapp
 
 ## File Descriptions <a name="files"></a>
 
-There is one notebook available here to showcase work related to the above questions. The notebook is exploratory in searching through the data pertaining to the questions showcased by the notebook title.  Markdown cells were used to assist in walking through the thought process for individual steps.  
+The file structure is as below:
 
-There are ... data files used in the notebook. "..." is the data file for... .
+- app
+| - template
+| |- master.html  # main page of web app
+| |- go.html  # classification result page of web app
+|- run.py  # Flask file that runs app
 
-The data file is available at [website](http://....).
+- data
+|- DisasterResponse.db   # database to save clean data to
+|- disaster_categories.csv  # data to process 
+|- disaster_messages.csv  # data to process
+|- process_data.py  # clean and save data
+
+- img
+|- Classifier_results.jpg  # image for README file 
+|- WebApp_classifier.jpg  # image for README file 
+|- WebApp_home.jpg   # image for README file 
+|- run_webApp.jpg   # image for README file 
+
+- models
+|- train_classifier.py   # build classifier pipeline
+|- classifier.pkl  # saved model 
+ 
+- ETL Pipeline Preparation.ipynb
+- ML Pipeline Preparation.ipynb
+- README.md
+
+There are two notebooks available here which are used to write two python files: process_data.py for data cleaning and train_classifier.py for building machine learning pipeline. The notebooks are doing the same thing as in the python files, but adding more Markdown cells and visualization to assist in walking through the thought process for individual steps.  
+
+The "data" folder holds two csv data files used in process_data.py. The data is cleaned, combined and saved to DisasterResponse.db. The database is used in ./model/train_classifier.py to build the machine learning pipeline and also in ./app/run.py to run the web app. The optimized classifier model is save to ./model/classifier.pkl which will be called in run.py to run the web app.
+
+The web app has two templates in ./app/template: master.html and go.html which will be driven by run.py.
+
+"img" folder just contains four images for this README file.
 
 ## Results <a name="results"></a>
 
-The main findings of the code is ....
+There are three steps to run this projects:
 
-After additional exploring I think that we can safely change value 2 of "related" column to 0, because rows with values 0 and 2 have the same pattern of class label values - if "related" column has one of these values, then all another class labels are equal 0 (which is not true for value 1).
+### 1. ETL pipeline
 
-Also this finding means that we can predict at first whether the message is related (related=1), and then predict all other class labels, otherwise (related=0) we can zero all another class labels.
+- Load 'messages' and 'categories' dataset
+- Merge the two datasets
+- Clean and wrangle the data
+- Stores the data into DisasterResponse.db
+
+See more details in ./data/process_data.py
+
+### 2. ML pipeline
+
+- Load and further clean the data from DisasterResponse.db
+- Split the data into training and testing data
+- Build the machine learning pipeline using features from parallel text processing pipelines
+- Train and optimize the classifier model using GridSearchCV
+- Predict results on the test data
+- Print out the test results and export the optimized model to classifier.pkl
+
+The test results are shown in the image below:
+
+![results](img/Classifier_results.jpg)
+
+See more details in ./model/train_classifier.py
+
+### 3. Flask web app
+
+- go to "app" directory in the terminal and Run run.py (python run.py)
+- Check the web page
+
+--If you are working in Udacity workspace:
+
+Run your app with python run.py command until you see messages as in the image below:
+
+![results](img/run_webApp.jpg)
+
+Open another terminal and type env|grep WORK this will give you the spaceid (it will start with view*** and some characters after that)
+Now open your browser window and type https://viewa7a4999b-3001.udacity-student-workspaces.com, replace the whole viewa7a4999b with your space id that you got in the previous step
+Press enter and the app should now run for you
+
+--If you are working on your local Machine:
+
+Once your app is running (python run.py)
+Go to http://localhost:3001 and the app will now run
+
+The web page should look as below
+
+![results](img/WebApp_home.jpg)
+
+Type in a message and press "Classify Message" button, you will see the web page showing the message labels as below:
+
+![results](img/WebApp_classifier.jpg)
+
+## Discussion <a name="discussion"></a>
+The data is unbalance as 
+
+![results](img/Category_percentage.jpg)
 
 ## Licensing, Authors, Acknowledgements <a name="licensing"></a>
 
-Must give credit to .... for the data.  You can find the Licensing for the data and other descriptive information at the link available [here](http://...).  Otherwise, feel free to use the code here as you would like! 
+Must give credit to [Figure Eight](https://appen.com/) and [Udacity data science nano degree course](https://www.udacity.com/course/data-scientist-nanodegree--nd025) for the data.  You can find the Licensing for the data and other descriptive information at [Figure Eight](https://appen.com/).  Otherwise, feel free to use the code here as you would like! 
