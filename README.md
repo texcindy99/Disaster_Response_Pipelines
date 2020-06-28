@@ -27,7 +27,7 @@ The file structure is as below:
 
 There are two notebooks available here which are used to write two python files: process_data.py for data cleaning and train_classifier.py for building machine learning pipeline. The notebooks are doing the same thing as in the python files, but adding more Markdown cells and visualization to assist in walking through the thought process for individual steps.  
 
-The "data" folder holds two csv data files used in process_data.py. The data is cleaned, combined and saved to DisasterResponse.db. The database is used in ./model/train_classifier.py to build the machine learning pipeline and also in ./app/run.py to run the web app. The optimized classifier model is save to ./model/classifier.pkl which will be called in run.py to run the web app.
+The "data" folder holds two csv data files used in process_data.py. The data is cleaned, combined and saved to DisasterResponse.db. The database is used in ./model/train_classifier.py to build the machine learning pipeline and also in ./app/run.py to run the web app. The optimized classifier model is save to ./model/classifier.pkl which will be called in run.py to run the web app. Note that classifier.pkl is too large to upload to Github, but you can always generate it yourself by running train_classifier.py. It may take more than 1 hour to get results depending on your computer power.
 
 The web app has two templates in ./app/template: master.html and go.html which will be driven by run.py.
 
@@ -91,13 +91,17 @@ Type in a message and press "Classify Message" button, you will see the web page
 
 ## Discussion <a name="discussion"></a>
 
-I need to use MultiOutputClassifier to classify the messages since one message may have more than one label categories as you can see in the image below.
+MultiOutputClassifier is chosen to classify the messages since one message may have more than one label categories as you can see in the image below.
 
 ![ ](img/Number_of_labels.jpg)
 
-The data is unbalance as 
+The category data needs to be cleaned before feeding into the machine learning pipeline since 188 messages are labels as "2" in "related" category. After analyzing the data pattern, those "2" label are reset to "0".
+
+The data is unbalanced as you can see in the image below. Majority of messages is labeled as "related" category. But 33 out of 36 categories are labeled as "1" in less than 20% of messages, which means those categories have much more "0" class than "1" class. furthermore, "child alone" category is "0" in all messages. This makes the classifier has no predicted samples in some cases and receive the warning "UndefinedMetricWarning: F-score is ill-defined and being set to 0.0 in labels with no predicted samples". After optimization, the weighted average F1-score is only 0.7 on the test data.  
 
 ![ ](img/Category_percentage.jpg)
+
+Estimator LinearSVC() has better performance to deal with unbalanced data. But it can't take category which only has 1 class such as "child alone" are all "0". To use LinearSVC(), "child alone" category should be dropped off from the data for machine learning. To classify all 36 categories, RandomForestClassifier() is chosen as the estimator.
 
 ## Licensing, Authors, Acknowledgements <a name="licensing"></a>
 
