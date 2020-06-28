@@ -103,6 +103,8 @@ The data is unbalanced as you can see in the image below. Majority of messages i
 
 Estimator LinearSVC() has better performance to deal with unbalanced data. But it can't take category which only has 1 class such as "child alone" are all "0". To use LinearSVC(), "child alone" category should be dropped off from the data for machine learning. To classify all 36 categories, RandomForestClassifier() is chosen as the estimator.
 
+And if you want to deploy the web app on Heroku, please check this [Github repo](https://github.com/texcindy99/Heroku_Web_App_Development)
+
 ## Licensing, Authors, Acknowledgements <a name="licensing"></a>
 
 Must give credit to [Figure Eight](https://appen.com/) and [Udacity data science nano degree course](https://www.udacity.com/course/data-scientist-nanodegree--nd025) for the data.  You can find the Licensing for the data and other descriptive information at [Figure Eight](https://appen.com/).  Otherwise, feel free to use the code here as you would like! 
