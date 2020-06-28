@@ -58,31 +58,32 @@
             <h1 class="text-center">Overview of Training Dataset</h1>
         </div>
     {% endblock %}
-</div>
+  
+    {% for id in ids %}
 
-<div id="charts" class="container mt-3 text-center">
-    <!--{% for id in ids %}-->
-    <div class="row mb-6">
-      <div class="col-6">
-        <div id="{{ids[0]}}"></div>
-       </div>
-     
-      <div class="col-6">
-        <div id="{{ids[1]}}"></div>
-      </div>
-    </div>
-  
-    <div class="row mb-6">
-     <div class="col-6">
-       <div id="{{ids[2]}}"></div>
-      </div>
-     
-     <div class="col-6">
-       <div id="{{ids[3]}}"></div>
-     </div>
-    </div>
-  
-    <!--{% endfor %}-->
+        <div class="row" style="display:flex">
+
+                <div class="col-6">
+                    <div id="{{ids[0]}}"></div>
+                </div>
+          
+                <div class="col-7">
+                    <div id="{{ids[1]}}"></div>
+                </div>
+        </div>
+          
+        <div class="row" style="display:flex">
+          
+                <div class="col-6">
+                    <div id="{{ids[2]}}"></div>
+                </div>       
+          
+                <div class="col-7">
+                    <div id="{{ids[3]}}"></div>
+                </div>
+        </div>
+
+    {% endfor %}
 </div>
 
 <script type="text/javascript">
